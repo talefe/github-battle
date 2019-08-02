@@ -40,6 +40,10 @@ li {
   color: inherit;
 }
 
+.nav-link:active{
+  color: rgb(187,46,31);
+}
+
 .grid {
   display: flex;
   flex-wrap: wrap;
