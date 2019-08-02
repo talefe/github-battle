@@ -17,8 +17,6 @@ function Card({ header, subheader, avatar, href, name, children }) {
   );
 }
 
-function CardItem({ Component, color }) {}
-
 Card.propTypes = {
   header: PropTypes.string.isRequired,
   subheader: PropTypes.string,
