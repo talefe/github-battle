@@ -8,6 +8,7 @@ var {
   FaExclamationTriangle
 } = require('react-icons/fa');
 var Card = require('./Card');
+var Loading = require('./Loading');
 
 SelectLanguage = ({ selectedLanguage, onUpdateLanguage }) => {
   var languages = ['All', 'JavaScript', 'Ruby', 'Java', 'CSS', 'Python'];
@@ -141,7 +142,7 @@ class Popular extends React.Component {
           onUpdateLanguage={this.updateLanguage}
         />
         {this.isLoading() ? (
-          <p>LOADING</p>
+          <Loading text="Fetching repos" speed={300} />
         ) : (
           <RepoGrid repos={repos[selectedLanguage]} />
         )}

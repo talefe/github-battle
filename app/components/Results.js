@@ -10,6 +10,7 @@ var {
 } = require('react-icons/fa');
 var Card = require('./Card');
 var PropTypes = require('prop-types');
+var Loading = require('./Loading');
 
 function ProfileList({ profile }) {
   return (
@@ -72,7 +73,7 @@ class Results extends React.Component {
     const { winner, loser, error, loading } = this.state;
 
     if (loading) {
-      return <h1>Loading</h1>;
+      return <Loading />;
     }
 
     if (error) {
