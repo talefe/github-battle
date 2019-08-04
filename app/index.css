@@ -238,3 +238,25 @@ li {
   font-size: 20px;
   margin: 50px 0;
 }
+
+.hover-popup {
+  box-sizing: border-box;
+  position: absolute;
+  width: 160px;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -80px;
+  border-radius: 3;
+  background-color: hsla(0, 0%, 20%, 0.9);
+  padding: 7px;
+  margin-bottom: 5px;
+  color: #fff;
+  text-align: center;
+  font-size: 14px;
+}
+
+.hover-box{
+  position: relative;
+  display: flex;
+}
+

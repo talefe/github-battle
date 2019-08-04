@@ -9,6 +9,7 @@ var {
 } = require('react-icons/fa');
 var Card = require('./Card');
 var Loading = require('./Loading');
+var Tooltip = require('./Tooltip');
 
 SelectLanguage = ({ selectedLanguage, onUpdateLanguage }) => {
   var languages = ['All', 'JavaScript', 'Ruby', 'Java', 'CSS', 'Python'];
@@ -59,9 +60,11 @@ RepoGrid = ({ repos }) => {
             >
               <ul className="card-list">
                 <li>
-                  <FaUser color="rgb(255,191,116)" size={22} />
-                  <a href={`https://github.com/${login}`} />
-                  {login}
+                  <Tooltip text="Github username">
+                    <FaUser color="rgb(255,191,116)" size={22} />
+                    <a href={`https://github.com/${login}`} />
+                    {login}
+                  </Tooltip>
                 </li>
                 <li>
                   <FaStar color="rgb(255,215,0)" size={22} />

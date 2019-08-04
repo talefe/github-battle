@@ -11,7 +11,6 @@ function getErrorMessage(username, message) {
 }
 function getProfile(username) {
   let getUserURI = window.encodeURI(`${githubEndpoint}/users/${username}`);
-  console.log(getUserURI);
   return fetch(getUserURI)
     .then(res => res.json())
     .then(profile => {
