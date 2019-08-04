@@ -13,9 +13,7 @@ var PropTypes = require('prop-types');
 var Loading = require('./Loading');
 var Tooltip = require('./Tooltip');
 
-ProfileList = () => {
-  const { profile } = this.props;
-
+ProfileList = ({ profile }) => {
   return (
     <ul className="card-list">
       <li>

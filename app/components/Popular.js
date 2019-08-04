@@ -124,10 +124,10 @@ class Popular extends React.Component {
             error: null
           }));
         })
-        .catch(error => {
+        .catch(({ message }) => {
           console.warn('Error fetching repos: ', error);
           this.setState({
-            error: 'There was an error fetching the repositories.'
+            error: message
           });
         });
     }
@@ -138,6 +138,9 @@ class Popular extends React.Component {
   };
   render() {
     const { selectedLanguage, repos, error } = this.state;
+    if (error) {
+      return <p className="center-text error">{error}</p>;
+    }
     return (
       <React.Fragment>
         <SelectLanguage
