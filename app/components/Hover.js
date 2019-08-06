@@ -14,7 +14,7 @@ class Hover extends React.Component {
   render() {
     return (
       <div onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
-        {this.props.children(this.state.hovering)}
+        {this.props.render(this.state.hovering)}
       </div>
     );
   }
