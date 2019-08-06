@@ -124,10 +124,10 @@ class Popular extends React.Component {
             error: null
           }));
         })
-        .catch(({ message }) => {
+        .catch(error => {
           console.warn('Error fetching repos: ', error);
           this.setState({
-            error: message
+            error
           });
         });
     }

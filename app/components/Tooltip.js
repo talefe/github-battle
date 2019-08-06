@@ -1,19 +1,22 @@
 var React = require('react');
 var PropTypes = require('prop-types');
-var withHover = require('./withHover');
+var Hover = require('./Hover');
 
-function Tooltip({ text, children, hovering }) {
+function Tooltip({ text, children }) {
   return (
-    <div className="hover-box">
-      {hovering && <div className="hover-popup">{text}</div>}
-      {children}
-    </div>
+    <Hover
+      render={hovering => (
+        <div className="hover-box">
+          {hovering && <div className="hover-popup">{text}</div>}
+          {children}
+        </div>
+      )}
+    />
   );
 }
 
 Tooltip.propTypes = {
-  text: PropTypes.string.isRequired,
-  hovering: PropTypes.bool.isRequired
+  text: PropTypes.string.isRequired
 };
 
-module.exports = withHover(Tooltip, 'hovering');
+module.exports = Tooltip;
