@@ -59,24 +59,23 @@ function sortPlayers(players) {
   return players.sort((p1, p2) => p2.score - p1.score);
 }
 
-module.exports = {
-  getPopularRepos(language) {
-    let getReposURI = window.encodeURI(
-      `${githubEndpoint}/search/repositories?q=stars:>1+language:${language}&sort=stars&order=desc&type=Repositories`
-    );
+export function getPopularRepos(language) {
+  let getReposURI = window.encodeURI(
+    `${githubEndpoint}/search/repositories?q=stars:>1+language:${language}&sort=stars&order=desc&type=Repositories`
+  );
 
-    return fetch(getReposURI)
-      .then(res => res.json())
-      .then(data => {
-        if (!data.items) {
-          throw new Error(data.message);
-        }
-        return data.items;
-      });
-  },
-  battle(players) {
-    return Promise.all([getUserData(players[0]), getUserData(players[1])]).then(
-      results => sortPlayers(results)
-    );
-  }
-};
+  return fetch(getReposURI)
+    .then(res => res.json())
+    .then(data => {
+      if (!data.items) {
+        throw new Error(data.message);
+      }
+      return data.items;
+    });
+}
+export function battle(players) {
+  return Promise.all([
+    getUserData(players[0]),
+    getUserData(players[1])
+  ]).then(results => sortPlayers(results));
+}

@@ -1,11 +1,14 @@
-html, body, #app {
+html,
+body,
+#app {
   margin: 0;
   height: 100%;
   width: 100%;
 }
 
 body {
-  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen-Sans,
+    Ubuntu, Cantarell, Helvetica Neue, sans-serif;
 }
 
 ul {
@@ -20,6 +23,12 @@ li {
   max-width: 1200px;
   margin: 0 auto;
   padding: 50px;
+}
+
+.dark {
+  color: #dadada;
+  background: #1c2022;
+  min-height: 100%;
 }
 
 .flex-center {
@@ -40,8 +49,8 @@ li {
   color: inherit;
 }
 
-.nav-link:active{
-  color: rgb(187,46,31);
+.nav li {
+  margin-right: 10px;
 }
 
 .grid {
@@ -51,6 +60,10 @@ li {
 
 .space-around {
   justify-content: space-around;
+}
+
+.space-between {
+  justify-content: space-between;
 }
 
 .header-lg {
@@ -138,7 +151,7 @@ li {
 
 .battle-instructions li {
   flex: 1;
-  min-width: 300px
+  min-width: 300px;
 }
 
 .battle-instructions svg {
@@ -146,50 +159,50 @@ li {
   border-radius: 3px;
 }
 
-.column{
+.column {
   display: flex;
   flex-direction: column;
 }
 
-.row{
+.row {
   display: flex;
   flex-direction: row;
 }
 
-.player{
+.player {
   flex: 1;
   margin: 0 20px;
-  padding: 20px;
+  padding: 10px;
 }
 
-.player-label{
+.player-label {
   font-size: 20px;
   margin: 5px 0;
   font-weight: 300;
 }
 
-.player-inputs input{
+.player-inputs input {
   padding: 8px;
   font-size: 16px;
   flex: 2;
   border-radius: 3px;
   border: none;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.15);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15);
 }
 
-.player-inputs .input-light{
-  background: rgba(0,0,0,0.02);
+.player-inputs .input-light {
+  background: rgba(0, 0, 0, 0.02);
 }
 
-.player-inputs button{
+.player-inputs button {
   flex: 1;
   margin-left: 10px;
 }
 
-.btn{
+.btn {
   padding: 10px;
   text-decoration: uppercase;
-  letter-spacing: .25em;
+  letter-spacing: 0.25em;
   border-radius: 3px;
   border: none;
   font-size: 16px;
@@ -201,23 +214,37 @@ li {
   max-width: 200px;
 }
 
-.btn-dark{
+.btn-light {
+  color: #000;
+  background: #aaa8a8;
+}
+
+.btn-dark:disabled {
+  background: #292929;
+  color: #4a4a4a;
+}
+
+.btn-dark {
   color: #e6e6e6;
   background: #141414;
 }
 
-.btn-dark:disabled{
+.btn-dark:disabled {
   background: #f2f2f2;
   color: #c7c7c7;
 }
 
-.avatar-small{
+.players-container {
+  margin: 100px 0;
+}
+
+.avatar-small {
   width: 55px;
   height: 55px;
   border-radius: 50%;
 }
 
-.player-info{
+.player-info {
   display: flex;
   flex: 1;
   align-items: center;
@@ -225,11 +252,11 @@ li {
   padding: 10px;
 }
 
-.player-info .link{
+.player-info .link {
   margin-left: 10px;
 }
 
-.btn-space{
+.btn-space {
   margin: 40px auto;
 }
 
@@ -237,6 +264,16 @@ li {
   color: #ff1616;
   font-size: 20px;
   margin: 50px 0;
+}
+
+.bg-dark {
+  background: rgb(36, 40, 42);
+  border-radius: 3px;
+}
+
+.player-inputs .input-dark {
+  color: #dadada;
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .hover-popup {
@@ -255,8 +292,7 @@ li {
   font-size: 14px;
 }
 
-.hover-box{
+.hover-box {
   position: relative;
   display: flex;
 }
-

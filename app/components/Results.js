@@ -1,29 +1,30 @@
-var React = require('react');
-var { battle } = require('../utils/api');
-var {
+import React, { Component, Fragment } from 'react';
+import { battle } from '../utils/api';
+import {
   FaCompass,
   FaBriefcase,
   FaUser,
   FaUserFriends,
-  FaCode,
   FaUsers
-} = require('react-icons/fa');
-var Card = require('./Card');
-var PropTypes = require('prop-types');
-var Loading = require('./Loading');
-var Tooltip = require('./Tooltip');
+} from 'react-icons/fa';
+import Card from './Card';
+import PropTypes from 'prop-types';
+import Loading from './Loading';
+import Tooltip from './Tooltip';
+import queryString from 'query-string';
+import { Link } from 'react-router-dom';
 
-ProfileList = ({ profile }) => {
+function ProfileList({ profile }) {
   return (
-    <ul className="card-list">
+    <ul className='card-list'>
       <li>
-        <FaUser color="rgb(239, 115, 115)" size={22} />
+        <FaUser color='rgb(239, 115, 115)' size={22} />
         {profile.name}
       </li>
       {profile.location && (
         <li>
           <Tooltip text="User's location">
-            <FaCompass color="rgb(144, 115, 255)" size={22} />
+            <FaCompass color='rgb(144, 115, 255)' size={22} />
             {profile.location}
           </Tooltip>
         </li>
@@ -31,36 +32,45 @@ ProfileList = ({ profile }) => {
       {profile.company && (
         <li>
           <Tooltip text="User's company">
-            <FaBriefcase color="#795548" size={22} />
+            <FaBriefcase color='#795548' size={22} />
             {profile.company}
           </Tooltip>
         </li>
       )}
       <li>
-        <FaUsers color="rgb(129, 195, 245)" size={22} />
+        <FaUsers color='rgb(129, 195, 245)' size={22} />
         {profile.followers.toLocaleString()} followers
       </li>
       <li>
-        <FaUserFriends color="rgb(64, 183, 95)" size={22} />
-        {profile.following} following
+        <FaUserFriends color='rgb(64, 183, 95)' size={22} />
+        {profile.following.toLocaleString()} following
       </li>
     </ul>
   );
-};
+}
 
 ProfileList.propTypes = {
-  profile: PropTypes.object.isRequired
+  profile: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    location: PropTypes.string,
+    company: PropTypes.string,
+    followers: PropTypes.number.isRequired,
+    following: PropTypes.number.isRequired
+  })
 };
 
-class Results extends React.Component {
+class Results extends Component {
   state = {
     winner: null,
     loser: null,
     error: null,
     loading: true
   };
-  componentDidMount = () => {
-    const { playerOne, playerTwo } = this.props;
+
+  componentDidMount() {
+    const { playerOne, playerTwo } = queryString.parse(
+      this.props.location.search
+    );
 
     battle([playerOne, playerTwo])
       .then(players => {
@@ -77,7 +87,7 @@ class Results extends React.Component {
           loading: false
         });
       });
-  };
+  }
   render() {
     const { winner, loser, error, loading } = this.state;
 
@@ -86,12 +96,12 @@ class Results extends React.Component {
     }
 
     if (error) {
-      return <p className="center-text error">{error}</p>;
+      return <p className='center-text error'>{error}</p>;
     }
 
     return (
-      <React.Fragment>
-        <div className="grid space-around container-sm">
+      <Fragment>
+        <div className='grid space-around container-sm'>
           <Card
             header={winner.score === loser.score ? 'Tie' : 'Winner'}
             subheader={`Score: ${winner.score.toLocaleString()}`}
@@ -112,31 +122,12 @@ class Results extends React.Component {
           </Card>
         </div>
 
-        <button className="btn btn-dark btn-space" onClick={this.props.onReset}>
+        <Link className='btn btn-dark btn-space' to='/battle'>
           Reset
-        </button>
-      </React.Fragment>
+        </Link>
+      </Fragment>
     );
   }
 }
 
-Results.propTypes = {
-  playerOne: PropTypes.string.isRequired,
-  playerTwo: PropTypes.string.isRequired,
-  onReset: PropTypes.func.isRequired
-};
-
-// Before building the UI,
-// we should check if our data is how we want it to be
-
-/*
-render() {
-    return (
-        <div>
-            Results
-            <pre>{JSON.stringify(this.state, null, 2)}</pre>
-        </div>
-    )
-}
-*/
-module.exports = Results;
+export default Results;

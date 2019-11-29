@@ -11,8 +11,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/plugin-syntax-class-properties": "^7.7.4",
     "axios": "^0.19.0",
     "prop-types": "^15.7.2",
+    "query-string": "^6.9.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-icons": "^3.7.0",

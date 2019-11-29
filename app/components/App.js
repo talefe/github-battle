@@ -1,33 +1,39 @@
-var React = require('react');
-var Popular = require('./Popular');
-var ReactRouter = require('react-router-dom');
-var Router = ReactRouter.BrowserRouter;
-var Route = ReactRouter.Route;
-var Switch = ReactRouter.Switch;
-var Nav = require('./Nav');
-var Home = require('./Home');
-var Battle = require('./Battle');
+import React, { Component } from 'react';
+import Popular from './Popular';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import Nav from './Nav';
+import Battle from './Battle';
+import { ThemeProvider } from '../contexts/theme';
+import Results from './Results';
 
-class App extends React.Component {
+class App extends Component {
+  state = {
+    theme: 'light',
+    toggleTheme: () => {
+      this.setState(({ theme }) => ({
+        theme: theme === 'light' ? 'dark' : 'light'
+      }));
+    }
+  };
   render() {
     return (
       <Router>
-        <div className="container">
-          <Nav />
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/battle" component={Battle} />
-            <Route path="/popular" component={Popular} />
-            <Route
-              render={function() {
-                return <p>Not Found</p>;
-              }}
-            />
-          </Switch>
-        </div>
+        <ThemeProvider value={this.state}>
+          <div className={this.state.theme}>
+            <div className='container'>
+              <Nav />
+              <Switch>
+                <Route exact path='/' component={Popular} />
+                <Route exact path='/battle' component={Battle} />
+                <Route path='/battle/results' component={Results} />
+                <Route render={() => <p>404 Not Found</p>} />
+              </Switch>
+            </div>
+          </div>
+        </ThemeProvider>
       </Router>
     );
   }
 }
 
-module.exports = App;
+export default App;

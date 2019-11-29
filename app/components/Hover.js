@@ -1,6 +1,6 @@
-var React = require('react');
+import React, { Component } from 'react';
 
-class Hover extends React.Component {
+class Hover extends Component {
   state = {
     hovering: false
   };
@@ -20,4 +20,4 @@ class Hover extends React.Component {
   }
 }
 
-module.exports = Hover;
+export default Hover;

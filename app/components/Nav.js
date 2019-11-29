@@ -1,39 +1,48 @@
-var React = require('react');
-var NavLink = require('react-router-dom').NavLink;
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import { ThemeConsumer } from '../contexts/theme';
+
+const activeStyle = {
+  color: 'rgb(187, 46, 31)'
+};
 
 function Nav() {
   return (
-    <ul className="flex-center">
-      <li style={{ margin: 5 }}>
-        <NavLink
-          exact
-          activeClassName="active"
-          to="/"
-          className="btn-clear nav-link"
-        >
-          Home
-        </NavLink>
-      </li>
-      <li style={{ margin: 5 }}>
-        <NavLink
-          activeClassName="active"
-          to="/battle"
-          className="btn-clear nav-link"
-        >
-          Battle
-        </NavLink>
-      </li>
-      <li style={{ margin: 5 }}>
-        <NavLink
-          activeClassName="active"
-          to="/popular"
-          className="btn-clear nav-link"
-        >
-          Popular
-        </NavLink>
-      </li>
-    </ul>
+    <ThemeConsumer>
+      {({ theme, toggleTheme }) => (
+        <nav className='row space-between'>
+          <ul className='row nav'>
+            <li>
+              <NavLink
+                activeStyle={activeStyle}
+                to='/'
+                exact
+                className='nav-link'
+              >
+                Popular
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                activeStyle={activeStyle}
+                to='/battle'
+                className='nav-link'
+              >
+                Battle
+              </NavLink>
+            </li>
+          </ul>
+          <button
+            style={{ fontSize: 30 }}
+            className='btn-clear'
+            onClick={toggleTheme}
+          >
+            {theme === 'light' ? '🔦' : '💡'}
+          </button>
+        </nav>
+      )}
+    </ThemeConsumer>
   );
 }
 
-module.exports = Nav;
+export default Nav;
