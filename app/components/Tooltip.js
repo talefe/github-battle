@@ -1,17 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Hover from './Hover';
+import useHover from '../hooks/useHover';
 
 function Tooltip({ text, children }) {
+  const [hovering, attrs] = useHover();
+
   return (
-    <Hover
-      render={hovering => (
-        <div className='hover-box'>
-          {hovering && <div className='hover-popup'>{text}</div>}
-          {children}
-        </div>
-      )}
-    />
+    <div className='hover-box' {...attrs}>
+      {hovering && <div className='hover-popup'>{text}</div>}
+      {children}
+    </div>
   );
 }
 

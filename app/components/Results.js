@@ -1,12 +1,6 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment, useState, useReducer, useEffect } from 'react';
 import { battle } from '../utils/api';
-import {
-  FaCompass,
-  FaBriefcase,
-  FaUser,
-  FaUserFriends,
-  FaUsers
-} from 'react-icons/fa';
+import { FaCompass, FaBriefcase, FaUser, FaUserFriends, FaUsers } from 'react-icons/fa';
 import Card from './Card';
 import PropTypes from 'prop-types';
 import Loading from './Loading';
@@ -59,75 +53,77 @@ ProfileList.propTypes = {
   })
 };
 
-class Results extends Component {
-  state = {
+function resultsReducer(state, action) {
+  if (action.type === 'success') {
+    return {
+      winner: action.winner,
+      loser: action.loser,
+      error: null,
+      loading: false
+    };
+  } else if (action.type === 'error') {
+    return {
+      ...state,
+      error: action.error.message
+    };
+  } else {
+    throw new Error('That action type is not suported');
+  }
+}
+
+export default function Results({ location }) {
+  const { playerOne, playerTwo } = queryString.parse(location.search);
+  const [state, dispatch] = useReducer(resultsReducer, {
     winner: null,
     loser: null,
     error: null,
     loading: true
-  };
+  });
 
-  componentDidMount() {
-    const { playerOne, playerTwo } = queryString.parse(
-      this.props.location.search
-    );
-
-    battle([playerOne, playerTwo])
-      .then(players => {
-        this.setState({
-          winner: players[0],
-          loser: players[1],
-          error: null,
-          loading: false
-        });
-      })
-      .catch(({ message }) => {
-        this.setState({
-          error: message,
-          loading: false
-        });
-      });
-  }
-  render() {
-    const { winner, loser, error, loading } = this.state;
-
-    if (loading) {
-      return <Loading />;
+  useEffect(() => {
+    async function getResults() {
+      try {
+        let [winner, loser] = await battle([playerOne, playerTwo]);
+        dispatch({ type: 'success', winner, loser });
+      } catch (error) {
+        dispatch({ type: 'error', error });
+      }
     }
+    getResults();
+  }, [playerOne, playerTwo]);
 
-    if (error) {
-      return <p className='center-text error'>{error}</p>;
-    }
-
-    return (
-      <Fragment>
-        <div className='grid space-around container-sm'>
-          <Card
-            header={winner.score === loser.score ? 'Tie' : 'Winner'}
-            subheader={`Score: ${winner.score.toLocaleString()}`}
-            avatar={winner.profile.avatar_url}
-            href={winner.profile.html_url}
-            name={winner.profile.login}
-          >
-            <ProfileList profile={winner.profile} />
-          </Card>
-          <Card
-            header={winner.score === loser.score ? 'Tie' : 'Loser'}
-            subheader={`Score: ${loser.score.toLocaleString()}`}
-            avatar={loser.profile.avatar_url}
-            href={loser.profile.html_url}
-            name={loser.profile.login}
-          >
-            <ProfileList profile={loser.profile} />
-          </Card>
-        </div>
-
-        <Link className='btn btn-dark btn-space' to='/battle'>
-          Reset
-        </Link>
-      </Fragment>
-    );
+  if (state.loading) {
+    return <Loading />;
   }
+
+  if (state.error) {
+    return <p className='center-text error'>{state.error}</p>;
+  }
+
+  return (
+    <Fragment>
+      <div className='grid space-around container-sm'>
+        <Card
+          header={state.winner.score === state.loser.score ? 'Tie' : 'Winner'}
+          subheader={`Score: ${state.winner.score.toLocaleString()}`}
+          avatar={state.winner.profile.avatar_url}
+          href={state.winner.profile.html_url}
+          name={state.winner.profile.login}>
+          <ProfileList profile={state.winner.profile} />
+        </Card>
+        <Card
+          header={state.winner.score === state.loser.score ? 'Tie' : 'Loser'}
+          subheader={`Score: ${state.loser.score.toLocaleString()}`}
+          avatar={state.loser.profile.avatar_url}
+          href={state.loser.profile.html_url}
+          name={state.loser.profile.login}>
+          <ProfileList profile={state.loser.profile} />
+        </Card>
+      </div>
+
+      <Link className='btn btn-dark btn-space' to='/battle'>
+        Reset
+      </Link>
+    </Fragment>
+  );
 }
-
-export default Results;

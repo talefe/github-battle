@@ -1,12 +1,7 @@
-import React, { Fragment, Component } from 'react';
+import React, { Fragment, useState, useReducer, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { getPopularRepos } from '../utils/api';
-import {
-  FaUser,
-  FaStar,
-  FaCodeBranch,
-  FaExclamationTriangle
-} from 'react-icons/fa';
+import { FaUser, FaStar, FaCodeBranch, FaExclamationTriangle } from 'react-icons/fa';
 import Card from './Card';
 import Loading from './Loading';
 import Tooltip from './Tooltip';
@@ -21,8 +16,7 @@ function LanguagesNav({ selected, onUpdateLanguage }) {
           <button
             className='btn-clear nav-link'
             style={language === selected ? { color: 'rgb(187,46,31)' } : null}
-            onClick={() => onUpdateLanguage(language)}
-          >
+            onClick={() => onUpdateLanguage(language)}>
             {language}
           </button>
         </li>
@@ -37,6 +31,7 @@ LanguagesNav.propTypes = {
 };
 
 export function RepoGrid({ repos }) {
+  console.log(repos);
   return (
     <ul className='grid space-around'>
       {repos.map((repo, index) => {
@@ -45,12 +40,7 @@ export function RepoGrid({ repos }) {
 
         return (
           <li key={html_url}>
-            <Card
-              header={`#${index + 1}`}
-              avatar={avatar_url}
-              href={html_url}
-              name={login}
-            >
+            <Card header={`#${index + 1}`} avatar={avatar_url} href={html_url} name={login}>
               <ul className='card-list'>
                 <li>
                   <Tooltip text='Github username'>
@@ -84,61 +74,65 @@ RepoGrid.propTypes = {
   repos: PropTypes.array.isRequired
 };
 
-class Popular extends Component {
-  state = {
-    selectedLanguage: 'All',
-    repos: {},
-    error: null
-  };
-
-  componentDidMount() {
-    this.updateLanguage(this.state.selectedLanguage);
-  }
-
-  updateLanguage = selectedLanguage => {
-    this.setState({
-      selectedLanguage,
+function popularReducer(state, action) {
+  if (action.type === 'success') {
+    return {
+      ...state,
+      [action.language]: action.repos,
       error: null
-    });
-    if (!this.state.repos[selectedLanguage]) {
-      getPopularRepos(selectedLanguage)
-        .then(data => {
-          this.setState(({ repos }) => ({
-            repos: { ...repos, [selectedLanguage]: data },
-            error: null
-          }));
-        })
-        .catch(error => {
-          console.warn('Error fetching repos: ', error);
-          this.setState({
-            error
-          });
-        });
-    }
-  };
-  isLoading = () => {
-    const { selectedLanguage, repos, error } = this.state;
-    return !repos[selectedLanguage] && error === null;
-  };
-  render() {
-    const { selectedLanguage, repos, error } = this.state;
-    if (error) {
-      return <p className='center-text error'>{error}</p>;
-    }
-    return (
-      <Fragment>
-        <LanguagesNav
-          selected={selectedLanguage}
-          onUpdateLanguage={this.updateLanguage}
-        />
-        {this.isLoading() && <Loading text='Fetching repos' speed={300} />}
-        {error && <p className='center-text error'>{error}</p>}
-        {repos[selectedLanguage] && (
-          <RepoGrid repos={repos[selectedLanguage]} />
-        )}
-      </Fragment>
-    );
+    };
+  } else if (action.type === 'error') {
+    return {
+      ...state,
+      error: action.error.message
+    };
+  } else {
+    throw new Error('That action type is not suported');
   }
 }
 
-export default Popular;
+export default function Popular() {
+  const [language, setLanguage] = useState('All');
+  const [state, dispatch] = useReducer(popularReducer, { error: null });
+  const fetchedLanguages = useRef([]);
+
+  useEffect(() => {
+    let isSubscribed = true;
+
+    if (fetchedLanguages.current.includes(language) === false) {
+      fetchedLanguages.current.push(language);
+
+      async function getRepos() {
+        try {
+          const data = await getPopularRepos(language);
+          if (isSubscribed) {
+            dispatch({ type: 'success', repos: data, language });
+          }
+        } catch (error) {
+          console.warn(error);
+          if (isSubscribed) {
+            dispatch({ type: 'error', error });
+          }
+        }
+      }
+      getRepos();
+    }
+
+    return () => (isSubscribed = false);
+  }, [fetchedLanguages, language]);
+
+  const isLoading = () => !state[language] && state.error === null;
+
+  if (state.error) {
+    return <p className='center-text error'>{state.error}</p>;
+  }
+
+  return (
+    <Fragment>
+      <LanguagesNav selected={language} onUpdateLanguage={setLanguage} />
+      {isLoading() && <Loading text='Fetching repos' speed={300} />}
+      {state.error && <p className='center-text error'>{state.error}</p>}
+      {state[language] && <RepoGrid repos={state[language]} />}
+    </Fragment>
+  );
+}

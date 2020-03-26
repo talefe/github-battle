@@ -23,9 +23,7 @@ function getProfile(username) {
 }
 
 function getRepos(username) {
-  let getUserReposURI = window.encodeURI(
-    `${githubEndpoint}/users/${username}/repos?&per_page=100`
-  );
+  let getUserReposURI = window.encodeURI(`${githubEndpoint}/users/${username}/repos?&per_page=100`);
 
   return fetch(getUserReposURI)
     .then(res => res.json())
@@ -47,12 +45,10 @@ function getStarCount(repos) {
 }
 
 function getUserData(player) {
-  return Promise.all([getProfile(player), getRepos(player)]).then(
-    ([profile, repos]) => ({
-      profile,
-      score: calculateScore(profile.followers, repos)
-    })
-  );
+  return Promise.all([getProfile(player), getRepos(player)]).then(([profile, repos]) => ({
+    profile,
+    score: calculateScore(profile.followers, repos)
+  }));
 }
 
 function sortPlayers(players) {
@@ -74,8 +70,7 @@ export function getPopularRepos(language) {
     });
 }
 export function battle(players) {
-  return Promise.all([
-    getUserData(players[0]),
-    getUserData(players[1])
-  ]).then(results => sortPlayers(results));
+  return Promise.all([getUserData(players[0]), getUserData(players[1])]).then(results =>
+    sortPlayers(results)
+  );
 }
